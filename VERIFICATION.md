@@ -46,3 +46,11 @@ The initial local checks above predated the protected Vercel deployment describe
 - The original UI components, styles and layout are unchanged by these fixes. AI remains disabled without a configured provider.
 - Eight regression tests use isolated temporary users in a local PostgreSQL database. They cover nested deletion, transaction rollback, cleanup retries, membership permissions, archived text, combined filters, pagination and public visibility.
 - The regression tests plus existing archive/configuration tests pass: 25 tests across six files. The production TypeScript check also passes.
+
+## Hostinger verification (2026-10-30)
+
+The website was deployed to `https://moccasin-chamois-968319.hostingersite.com` on the existing Business plan, retaining the existing external archive worker, PostgreSQL database and private Blob storage. No existing Hostinger website was replaced.
+
+Fifteen live checks passed: private access and source/API denial, automatic profile access, rendered page documents and frontend assets, nested collections, bookmark editing, tags, pins, annotations, archived-page text search, combined filters, all four archive formats, authenticated downloads, and nested deletion with HTTP 200 and complete test-data/file cleanup. AI and billing remain disabled. The hosting access gate and runtime-directory regression tests also pass (five tests).
+
+The original UI component/style files were not changed. This audit used live HTTP/API/database/worker checks; browser click interactions and visual layout comparison were not re-run. Hostinger's runtime-log API returned provider errors during the final scan. The build reported npm dependency-audit advisories which remain untriaged; no forced dependency upgrades were made. Further details and the private access file location are in `hostinger/README.md`.

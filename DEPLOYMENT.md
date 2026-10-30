@@ -1,6 +1,6 @@
 # Protected Vercel deployment
 
-The deployment target has changed to an existing Hostinger VPS. Automatic Vercel Git deployments are disabled. See [Hostinger VPS setup](hostinger/README.md) for the prepared configuration; server access and a domain are still required to deploy it. The information below records the existing protected Vercel installation.
+The website deployment target is Hostinger Business Node.js hosting at `moccasin-chamois-968319.hostingersite.com`. Automatic Vercel Git deployments are disabled. The existing Vercel preservation worker, PostgreSQL database and private Blob archive store are retained, as selected for this migration. See [Hostinger deployment](hostinger/README.md). The information below records the existing protected Vercel installation.
 
 GitHub repository: https://github.com/Akshat9999572/linkweb
 

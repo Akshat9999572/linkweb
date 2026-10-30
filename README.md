@@ -2,11 +2,11 @@
 
 Personal fork for Dr. Akshat Shukla, based on [Linkwarden](https://github.com/linkwarden/linkwarden), retaining its AGPL-3.0 license.
 
-The personal workspace opens automatically without application login screens. It includes an editable profile and removes cloud subscription checks and bookmark/RSS quotas. The deployment target is an existing Hostinger VPS with protection at the reverse proxy. Vercel automatic deployments are disabled; the prior Vercel site remains protected during migration.
+The personal workspace opens automatically without application login screens. It includes an editable profile and removes cloud subscription checks and bookmark/RSS quotas. The website targets Hostinger Business Node.js hosting with private access enforced before the application. The existing database, private archive store and external preservation worker are retained. Vercel automatic deployments are disabled.
 
 - [Local setup](LOCAL-SETUP.md)
 - [Personal mode](PERSONAL-MODE.md)
-- [Hostinger VPS setup](hostinger/README.md)
+- [Hostinger deployment](hostinger/README.md)
 - [Vercel deployment](DEPLOYMENT.md)
 
 The upstream project information follows.
