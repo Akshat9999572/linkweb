@@ -1,5 +1,17 @@
 # Hostinger VPS deployment
 
+## Business-plan adaptation
+
+Account inspection found Business web hosting and no VPS. `shared-server.cjs` runs the original Next.js application as one Node.js service with hosting-level password protection. `scripts/build-hostinger.mjs` builds it using the existing PostgreSQL database and archive store. `prepare-source.py` makes a web-only source package so unrelated mobile/extension workspaces and the worker are not installed on the shared plan. Update the staged Yarn lockfile before archiving.
+
+The Business plan does not support always-running background workers. The website can use the existing external archive worker, or automatic preservation can be paused; this choice must be made explicitly before deployment. The VPS files below remain available for a future VPS migration. No new plan or server is purchased by these scripts.
+
+The shared service requires `LINKWEB_ACCESS_USER`, `LINKWEB_ACCESS_PASSWORD_HASH` (SHA-256 of a randomly generated high-entropy access password), `PERSONAL_PROXY_HOST`, `PERSONAL_PROXY_SECRET`, `NEXTAUTH_URL`, `NEXTAUTH_SECRET`, `PERSONAL_MODE=true`, `PERSONAL_PROFILE_ID`, and the existing database/Blob credentials. Set `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` for dependency installation. Never deploy the source as a static website.
+
+Build settings: Node.js 22, Yarn, root `.`, build script `build`, application type `express`, output `.`, entry `hostinger/shared-server.cjs`. These are a prepared configuration; a successful live build and private-access checks are required before calling the migration complete.
+
+## VPS configuration
+
 This configuration runs the existing Next.js interface and preservation worker on an existing AMD64 VPS using Docker Compose. It retains the current PostgreSQL database and private Blob archive store so existing bookmarks and files remain available. AI stays disabled unless provider settings are added explicitly.
 
 ## Access and prerequisites
