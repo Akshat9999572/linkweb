@@ -37,4 +37,12 @@ REA MCP was used to inspect the original demo's login and authenticated dashboar
 
 The active database uses UTF-8 explicitly because the initial Windows PostgreSQL defaults rejected non-English content. The initial test database is retained separately. Clone-verification accounts were removed before the personal profile was provisioned. Personal-mode tests preserve the real personal profile.
 
-The application runs in development mode; opening an unvisited page can take time while Next.js compiles it. A production build and hosted deployment were not performed. Optional Meilisearch, email, AI, and payment integrations are not configured.
+The initial local checks above predated the protected Vercel deployment described in `DEPLOYMENT.md`. Optional Meilisearch, email, AI, and payment integrations are not configured.
+
+## Bookmark regression fixes (2026-10-30)
+
+- Collection deletion uses one database transaction for the whole collection tree, related data and navigation. Archive/search cleanup runs after commit, with retries for transient failures.
+- Database search includes archived page text, words and quoted phrases, and the existing field operators. Collection, tag, pin and text filters apply together.
+- The original UI components, styles and layout are unchanged by these fixes. AI remains disabled without a configured provider.
+- Eight regression tests use isolated temporary users in a local PostgreSQL database. They cover nested deletion, transaction rollback, cleanup retries, membership permissions, archived text, combined filters, pagination and public visibility.
+- The regression tests plus existing archive/configuration tests pass: 25 tests across six files. The production TypeScript check also passes.

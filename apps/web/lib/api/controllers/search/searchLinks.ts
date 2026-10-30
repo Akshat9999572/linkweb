@@ -7,6 +7,7 @@ import {
   parseSearchTokens,
 } from "../../searchQueryBuilder";
 import getAccessibleCollectionIds from "@/lib/api/getAccessibleCollectionIds";
+import { databaseSearchConditions } from "../../databaseSearchConditions";
 
 interface SearchLinksParams {
   query: LinkRequestQuery;
@@ -19,9 +20,6 @@ export default async function searchLinks({
   userId,
   publicOnly,
 }: SearchLinksParams) {
-  const POSTGRES_IS_ENABLED =
-    process.env.DATABASE_URL?.startsWith("postgresql");
-
   const paginationTakeCount = Number(process.env.PAGINATION_TAKE_COUNT) || 50;
 
   const accessibleCollectionIdsPromise = userId
@@ -112,14 +110,8 @@ export default async function searchLinks({
         AND: [
           ...accessCondition,
           ...collectionCondition,
-          {
-            OR: [
-              ...tagCondition,
-              {
-                ...pinnedCondition,
-              },
-            ],
-          },
+          ...tagCondition,
+          pinnedCondition,
         ],
       },
       omit: {
@@ -151,42 +143,11 @@ export default async function searchLinks({
     };
   }
 
-  // Fallback: No Meilisearch
-  const searchConditions = [];
-
-  if (query.searchQueryString) {
-    searchConditions.push({
-      name: {
-        contains: query.searchQueryString,
-        mode: POSTGRES_IS_ENABLED ? "insensitive" : undefined,
-      },
-    });
-
-    searchConditions.push({
-      url: {
-        contains: query.searchQueryString,
-        mode: POSTGRES_IS_ENABLED ? "insensitive" : undefined,
-      },
-    });
-
-    searchConditions.push({
-      description: {
-        contains: query.searchQueryString,
-        mode: POSTGRES_IS_ENABLED ? "insensitive" : undefined,
-      },
-    });
-
-    searchConditions.push({
-      tags: {
-        some: {
-          name: {
-            contains: query.searchQueryString,
-            mode: POSTGRES_IS_ENABLED ? "insensitive" : undefined,
-          },
-        },
-      },
-    });
-  }
+  // Search archived text and support the same field filters without Meilisearch.
+  const searchConditions = databaseSearchConditions(
+    query.searchQueryString || "",
+    userId
+  );
 
   const accessCondition = await resolveAccessCondition();
 
@@ -198,17 +159,9 @@ export default async function searchLinks({
       AND: [
         ...accessCondition,
         ...collectionCondition,
-        {
-          OR: [
-            ...tagCondition,
-            {
-              [query.searchQueryString ? "OR" : "AND"]: [
-                pinnedCondition,
-                ...searchConditions,
-              ],
-            },
-          ],
-        },
+        ...tagCondition,
+        pinnedCondition,
+        ...searchConditions,
       ],
     },
     omit: {
