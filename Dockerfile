@@ -29,6 +29,7 @@ COPY packages/lib/package.json ./packages/lib/
 COPY packages/prisma/package.json ./packages/prisma/
 COPY packages/router/package.json ./packages/router/
 COPY packages/types/package.json ./packages/types/
+COPY scripts/install-browser.cjs ./scripts/install-browser.cjs
 
 # Install everything needed to build
 RUN --mount=type=cache,sharing=locked,target=/root/.yarn/berry/cache \

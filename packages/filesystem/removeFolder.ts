@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import s3Client from "./s3Client";
+import { deleteBlobFolder, usesBlobStorage } from "./blob";
 import {
   DeleteObjectsCommand,
   DeleteObjectsCommandInput,
@@ -38,6 +39,7 @@ async function emptyS3Directory(bucket: string, dir: string) {
 }
 
 export async function removeFolder({ filePath }: { filePath: string }) {
+  if (usesBlobStorage()) return deleteBlobFolder(filePath);
   if (s3Client) {
     try {
       await emptyS3Directory(

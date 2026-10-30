@@ -73,3 +73,8 @@ service-account-file.json
 
 # The personal fork deploys through Vercel, not upstream release automation
 /.github/workflows/
+
+# Generated integration-agent setup is not application source
+/.agents/
+/skills-lock.json
+.env*

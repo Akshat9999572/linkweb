@@ -1,3 +1,15 @@
+# Linkweb — Personal Linkwarden
+
+Personal fork for Dr. Akshat Shukla, based on [Linkwarden](https://github.com/linkwarden/linkwarden), retaining its AGPL-3.0 license.
+
+The personal workspace opens automatically without application login screens. It includes an editable profile and removes cloud subscription checks and bookmark/RSS quotas. Hosted access is protected through Vercel Authentication.
+
+- [Local setup](LOCAL-SETUP.md)
+- [Personal mode](PERSONAL-MODE.md)
+- [Vercel deployment](DEPLOYMENT.md)
+
+The upstream project information follows.
+
 <div align="center">
   <img src="./assets/logo.png" width="100px" />
   <h1>Linkwarden</h1>

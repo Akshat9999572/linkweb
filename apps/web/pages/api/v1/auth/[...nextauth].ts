@@ -17,6 +17,16 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import EmailProvider from "next-auth/providers/email";
 import * as process from "process";
 
+if (
+  process.env.VERCEL === "1" &&
+  !process.env.NEXTAUTH_URL &&
+  process.env.VERCEL_URL
+) {
+  process.env.NEXTAUTH_URL = `https://${
+    process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL
+  }/api/v1/auth`;
+}
+
 type LinkAccountInput = Parameters<
   NonNullable<ReturnType<typeof PrismaAdapter>["linkAccount"]>
 >[0];
@@ -67,7 +77,21 @@ if (
       async authorize(credentials, req) {
         if (process.env.PERSONAL_MODE === "true") {
           const host = req.headers?.host;
-          if (!host || !/^(localhost|127\.0\.0\.1)(:\d+)?$/.test(host)) {
+          const hostedHosts = [
+            process.env.VERCEL_URL,
+            process.env.VERCEL_BRANCH_URL,
+            process.env.VERCEL_PROJECT_PRODUCTION_URL,
+          ];
+          const protectedVercelHost =
+            process.env.VERCEL === "1" &&
+            process.env.PERSONAL_VERCEL_PROTECTED === "true" &&
+            !!host &&
+            hostedHosts.includes(host);
+          if (
+            !host ||
+            (!/^(localhost|127\.0\.0\.1)(:\d+)?$/.test(host) &&
+              !protectedVercelHost)
+          ) {
             return null;
           }
           const id = Number(process.env.PERSONAL_PROFILE_ID);

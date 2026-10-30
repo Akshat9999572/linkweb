@@ -1,6 +1,16 @@
 node_modules
 pgdata
 .env
+.env.*
+!.env.sample
+.vercel
+local-runtime/data
+local-runtime/node_modules
+local-runtime/*.json
+local-runtime/*.png
+local-runtime/*.tgz
+local-runtime/bin
+apps/web/.next
 .devcontainer
 docker-compose.yml
 Dockerfile

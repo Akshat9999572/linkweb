@@ -7,6 +7,7 @@ import {
 import fs from "fs";
 import path from "path";
 import s3Client from "./s3Client";
+import { readBlob, usesBlobStorage } from "./blob";
 
 type ReturnContentTypes =
   | "text/plain"
@@ -17,6 +18,7 @@ type ReturnContentTypes =
   | "application/json";
 
 export async function readFile(filePath: string) {
+  if (usesBlobStorage()) return readBlob(filePath);
   let contentType: ReturnContentTypes;
 
   if (s3Client) {

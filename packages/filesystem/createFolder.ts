@@ -1,8 +1,10 @@
 import fs from "fs";
 import path from "path";
 import s3Client from "./s3Client";
+import { usesBlobStorage } from "./blob";
 
 export function createFolder({ filePath }: { filePath: string }) {
+  if (usesBlobStorage()) return;
   if (s3Client) {
     // Do nothing, S3 creates directories recursively
   } else {

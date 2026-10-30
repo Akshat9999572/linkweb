@@ -3,6 +3,7 @@ import crypto from "crypto";
 import { promises as fs } from "fs";
 import path from "path";
 import s3Client from "./s3Client";
+import { putBlob, usesBlobStorage } from "./blob";
 
 export async function createFile({
   filePath,
@@ -22,6 +23,7 @@ export async function createFile({
     bufferData = data;
   }
 
+  if (usesBlobStorage()) return putBlob(filePath, bufferData);
   if (s3Client) {
     const bytes = new Uint8Array(bufferData);
 

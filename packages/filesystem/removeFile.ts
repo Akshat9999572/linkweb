@@ -1,9 +1,11 @@
 import fs from "fs";
 import path from "path";
 import s3Client from "./s3Client";
+import { deleteBlob, usesBlobStorage } from "./blob";
 import { PutObjectCommandInput, DeleteObjectCommand } from "@aws-sdk/client-s3";
 
 export async function removeFile({ filePath }: { filePath: string }) {
+  if (usesBlobStorage()) return deleteBlob(filePath);
   if (s3Client) {
     const bucketParams: PutObjectCommandInput = {
       Bucket: process.env.SPACES_BUCKET_NAME,

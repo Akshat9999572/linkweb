@@ -1,9 +1,11 @@
 import fs from "fs";
 import path from "path";
 import s3Client from "./s3Client";
+import { moveBlob, usesBlobStorage } from "./blob";
 import { removeFile } from "./removeFile";
 
 export async function moveFile(from: string, to: string) {
+  if (usesBlobStorage()) return moveBlob(from, to);
   if (s3Client) {
     const Bucket = process.env.SPACES_BUCKET_NAME;
 
