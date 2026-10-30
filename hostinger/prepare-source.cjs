@@ -85,18 +85,26 @@ if (process.argv[2] === "--archive") {
   const file = path.join(stage, "package.json");
   const pkg = JSON.parse(fs.readFileSync(file, "utf8"));
   pkg.workspaces = ["apps/web", "packages/*"];
+  pkg.packageManager = "npm@10.9.2";
+  pkg.overrides = pkg.resolutions;
+  delete pkg.resolutions;
   delete pkg.devDependencies;
   pkg.scripts = {
     build: "node scripts/build-hostinger.mjs",
     start: "node hostinger/shared-server.cjs",
-    postinstall: "node scripts/install-browser.cjs && patch-package",
+    postinstall: "node scripts/install-browser.cjs",
   };
   pkg.engines = { node: "22.x" };
   fs.writeFileSync(file, JSON.stringify(pkg, null, 2) + "\n");
+  fs.writeFileSync(path.join(stage, ".npmrc"), "legacy-peer-deps=true\n");
+  // Hostinger's Yarn installer supplies unsupported Yarn 1 flags. Use npm only
+  // in this deployment artifact; the main repository retains its Yarn setup.
+  for (const name of ["yarn.lock", ".yarnrc.yml"])
+    fs.unlinkSync(path.join(stage, name));
   console.log(
     JSON.stringify({
       stage,
-      next: "Update the staged Yarn lockfile, then run --archive STAGE.",
+      next: "Generate the staged npm lockfile, then run --archive STAGE.",
     })
   );
 }

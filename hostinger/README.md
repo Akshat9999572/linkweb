@@ -2,13 +2,13 @@
 
 ## Business-plan adaptation
 
-Account inspection found Business web hosting and no VPS. `shared-server.cjs` runs the original Next.js application as one Node.js service with hosting-level password protection. `scripts/build-hostinger.mjs` builds it using the existing PostgreSQL database and archive store. `prepare-source.cjs` makes a web-only source package so unrelated mobile/extension workspaces and the worker are not installed on the shared plan. Update the staged Yarn lockfile before archiving.
+Account inspection found Business web hosting and no VPS. `shared-server.cjs` runs the original Next.js application as one Node.js service with hosting-level password protection. `scripts/build-hostinger.mjs` builds it using the existing PostgreSQL database and archive store. `prepare-source.cjs` makes a web-only source package so unrelated mobile/extension workspaces and the worker are not installed on the shared plan. Generate a staged npm lockfile with `npm install --package-lock-only --ignore-scripts` before archiving. This artifact uses npm because Hostinger's Yarn installer supplies a legacy flag that Yarn 4 rejects; the repository's Yarn setup remains unchanged.
 
 The Business plan does not support always-running background workers. The website can use the existing external archive worker, or automatic preservation can be paused; this choice must be made explicitly before deployment. The VPS files below remain available for a future VPS migration. No new plan or server is purchased by these scripts.
 
 The shared service requires `LINKWEB_ACCESS_USER`, `LINKWEB_ACCESS_PASSWORD_HASH` (SHA-256 of a randomly generated high-entropy access password), `PERSONAL_PROXY_HOST`, `PERSONAL_PROXY_SECRET`, `NEXTAUTH_URL`, `NEXTAUTH_SECRET`, `PERSONAL_MODE=true`, `PERSONAL_PROFILE_ID`, and the existing database/Blob credentials. Set `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` for dependency installation. Never deploy the source as a static website.
 
-Build settings: Node.js 22, Yarn, root `.`, build script `build`, application type `express`, output `.`, entry `hostinger/shared-server.cjs`. These are a prepared configuration; a successful live build and private-access checks are required before calling the migration complete.
+Build settings: Node.js 22, npm, root `.`, build script `build`, application type `express`, output `.`, entry `hostinger/shared-server.cjs`. A successful live build and private-access checks are required before calling the migration complete.
 
 ## VPS configuration
 
