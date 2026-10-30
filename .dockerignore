@@ -10,6 +10,8 @@ local-runtime/*.json
 local-runtime/*.png
 local-runtime/*.tgz
 local-runtime/bin
+local-runtime/**
+!local-runtime/personal-profile.mjs
 apps/web/.next
 .devcontainer
 docker-compose.yml

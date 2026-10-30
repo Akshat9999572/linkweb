@@ -1,5 +1,7 @@
 # Protected Vercel deployment
 
+The deployment target has changed to an existing Hostinger VPS. Automatic Vercel Git deployments are disabled. See [Hostinger VPS setup](hostinger/README.md) for the prepared configuration; server access and a domain are still required to deploy it. The information below records the existing protected Vercel installation.
+
 GitHub repository: https://github.com/Akshat9999572/linkweb
 
 Vercel project: `linkweb` in `akshats-projects-1f5449d1`.

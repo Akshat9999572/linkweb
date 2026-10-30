@@ -1,0 +1,48 @@
+services:
+  linkweb:
+    build:
+      context: ..
+      dockerfile: hostinger/Dockerfile
+    env_file: ../.env.hostinger
+    environment:
+      PERSONAL_MODE: "true"
+      PERSONAL_PROXY_HOST: ${LINKWEB_DOMAIN:?Set LINKWEB_DOMAIN}
+      NEXTAUTH_URL: https://${LINKWEB_DOMAIN:?Set LINKWEB_DOMAIN}/api/v1/auth
+      MAX_WORKERS: "1"
+      ARCHIVE_TAKE_COUNT: "1"
+    expose:
+      - "3000"
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3000/api/v1/config').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 10s
+      start_period: 90s
+      retries: 5
+  proxy:
+    image: caddy:2-alpine
+    environment:
+      LINKWEB_DOMAIN: ${LINKWEB_DOMAIN:?Set LINKWEB_DOMAIN}
+      LINKWEB_ACCESS_USER: ${LINKWEB_ACCESS_USER:?Set LINKWEB_ACCESS_USER}
+      LINKWEB_ACCESS_HASH: ${LINKWEB_ACCESS_HASH:?Set LINKWEB_ACCESS_HASH}
+      PERSONAL_PROXY_SECRET: ${PERSONAL_PROXY_SECRET:?Set PERSONAL_PROXY_SECRET}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      linkweb:
+        condition: service_healthy
+    restart: unless-stopped
+volumes:
+  caddy_data:
+  caddy_config:

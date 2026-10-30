@@ -1,0 +1,8 @@
+{$LINKWEB_DOMAIN} {
+    basic_auth {
+        {$LINKWEB_ACCESS_USER} {$LINKWEB_ACCESS_HASH}
+    }
+    reverse_proxy linkweb:3000 {
+        header_up X-Linkweb-Proxy-Key {$PERSONAL_PROXY_SECRET}
+    }
+}

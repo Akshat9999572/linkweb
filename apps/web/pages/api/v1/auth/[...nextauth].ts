@@ -10,6 +10,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { User } from "@linkwarden/prisma/client";
 import bcrypt from "bcrypt";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { personalSessionAllowed } from "@/lib/api/personalSessionAllowed";
 import type { Adapter } from "next-auth/adapters";
 import NextAuth from "next-auth/next";
 import { Provider } from "next-auth/providers";
@@ -76,21 +77,11 @@ if (
       credentials: {},
       async authorize(credentials, req) {
         if (process.env.PERSONAL_MODE === "true") {
-          const host = req.headers?.host;
-          const hostedHosts = [
-            process.env.VERCEL_URL,
-            process.env.VERCEL_BRANCH_URL,
-            process.env.VERCEL_PROJECT_PRODUCTION_URL,
-          ];
-          const protectedVercelHost =
-            process.env.VERCEL === "1" &&
-            process.env.PERSONAL_VERCEL_PROTECTED === "true" &&
-            !!host &&
-            hostedHosts.includes(host);
           if (
-            !host ||
-            (!/^(localhost|127\.0\.0\.1)(:\d+)?$/.test(host) &&
-              !protectedVercelHost)
+            !personalSessionAllowed(
+              req.headers?.host,
+              req.headers?.["x-linkweb-proxy-key"]
+            )
           ) {
             return null;
           }
