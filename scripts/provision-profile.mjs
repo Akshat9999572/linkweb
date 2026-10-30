@@ -35,7 +35,7 @@ execFileSync(
   { stdio: "inherit", env: migrationEnv }
 );
 process.env.PERSONAL_MODE = "true";
-delete process.env.PERSONAL_PROFILE_ID;
+process.env.PERSONAL_PROFILE_ID = "";
 const user = await ensurePersonalProfile(root, { persist: false });
 fs.writeFileSync(
   ".vercel/personal-profile.json",
