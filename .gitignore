@@ -78,3 +78,4 @@ service-account-file.json
 /.agents/
 /skills-lock.json
 .env*
+.hostinger/

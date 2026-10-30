@@ -33,7 +33,7 @@ if (process.argv[2] === "--archive") {
       [
         "-NoProfile",
         "-Command",
-        "Add-Type -AssemblyName System.IO.Compression.FileSystem; [System.IO.Compression.ZipFile]::CreateFromDirectory($env:LINKWEB_PACKAGE_STAGE, $env:LINKWEB_PACKAGE_ZIP)",
+        "Add-Type -AssemblyName System.IO.Compression, System.IO.Compression.FileSystem; $bundle = [System.IO.Compression.ZipFile]::Open($env:LINKWEB_PACKAGE_ZIP, [System.IO.Compression.ZipArchiveMode]::Create); try { Get-ChildItem -LiteralPath $env:LINKWEB_PACKAGE_STAGE -Recurse -File -Force | ForEach-Object { $name = $_.FullName.Substring($env:LINKWEB_PACKAGE_STAGE.Length + 1).Replace('\\', '/'); [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($bundle, $_.FullName, $name, [System.IO.Compression.CompressionLevel]::Optimal) | Out-Null } } finally { $bundle.Dispose() }",
       ],
       {
         env: {

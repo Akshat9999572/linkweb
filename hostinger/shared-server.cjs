@@ -23,7 +23,11 @@ const gate = accessGate({
     pathToFileURL(path.join(root, "local-runtime/personal-profile.mjs"))
   );
   await ensurePersonalProfile(root, { persist: false });
-  const app = require("next")({ dev: false, dir: path.join(root, "apps/web") });
+  const webRoot = path.join(root, "apps/web");
+  // Match `next start` from the web workspace: next-i18next and public assets
+  // resolve their paths from the working directory at request time.
+  process.chdir(webRoot);
+  const app = require("next")({ dev: false, dir: webRoot });
   const handle = app.getRequestHandler();
   await app.prepare();
   const server = http.createServer(async (req, res) => {
