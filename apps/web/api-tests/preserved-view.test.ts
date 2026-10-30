@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ArchivedFormat } from "@linkwarden/types/global";
-import handler from "./view";
+import handler from "@/pages/api/v1/preserved/view";
 import { readFile } from "@linkwarden/filesystem";
 import { decodePreservedFormatToken } from "@/lib/api/preserved/createPreservedFormatUrl";
 

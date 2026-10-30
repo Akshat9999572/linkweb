@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { getEnvData } from "./index";
+import { getEnvData } from "@/pages/api/v1/config";
 
 describe("getEnvData", () => {
   afterEach(() => {
